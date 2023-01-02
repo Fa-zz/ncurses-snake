@@ -1,5 +1,7 @@
 #include <ncurses.h>
 #include "Board.hpp"
+#include "SnakeGame.hpp"
+#include "Drawable.hpp"
 
 // defining consts to represent board dimensions
 #define BOARD_DIM 17
@@ -11,11 +13,15 @@ int main(int argc, char **argv) {
     initscr();
     refresh();
 
-    Board board(BOARD_ROWS, BOARD_COLS); // creation of board object
-    board.initialize();
+    //noecho();
+    SnakeGame game = SnakeGame(BOARD_ROWS, BOARD_COLS);
 
-    board.addAt(5, 5, '#');
-    board.refresh();
+    while (!game.isOver()) {
+        game.processInput(); // 1. get input from user (but do not wait indefinitely for input)
+        game.updateState(); // 2. update game state
+        game.redraw(); // 3. redraw display
+        // 4. go to 1, unless game over
+    }
 
     getch();
     endwin();
